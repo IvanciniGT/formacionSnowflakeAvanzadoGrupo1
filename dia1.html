@@ -1,0 +1,490 @@
+<!DOCTYPE html><html><head>
+      <title>dia1</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      
+      <link rel="stylesheet" href="file:////Users/ivan/.vscode/extensions/shd101wyy.markdown-preview-enhanced-0.8.11/crossnote/dependencies/katex/katex.min.css">
+      
+      
+      
+      
+      
+      <style>
+      code[class*=language-],pre[class*=language-]{color:#333;background:0 0;font-family:Consolas,"Liberation Mono",Menlo,Courier,monospace;text-align:left;white-space:pre;word-spacing:normal;word-break:normal;word-wrap:normal;line-height:1.4;-moz-tab-size:8;-o-tab-size:8;tab-size:8;-webkit-hyphens:none;-moz-hyphens:none;-ms-hyphens:none;hyphens:none}pre[class*=language-]{padding:.8em;overflow:auto;border-radius:3px;background:#f5f5f5}:not(pre)>code[class*=language-]{padding:.1em;border-radius:.3em;white-space:normal;background:#f5f5f5}.token.blockquote,.token.comment{color:#969896}.token.cdata{color:#183691}.token.doctype,.token.macro.property,.token.punctuation,.token.variable{color:#333}.token.builtin,.token.important,.token.keyword,.token.operator,.token.rule{color:#a71d5d}.token.attr-value,.token.regex,.token.string,.token.url{color:#183691}.token.atrule,.token.boolean,.token.code,.token.command,.token.constant,.token.entity,.token.number,.token.property,.token.symbol{color:#0086b3}.token.prolog,.token.selector,.token.tag{color:#63a35c}.token.attr-name,.token.class,.token.class-name,.token.function,.token.id,.token.namespace,.token.pseudo-class,.token.pseudo-element,.token.url-reference .token.variable{color:#795da3}.token.entity{cursor:help}.token.title,.token.title .token.punctuation{font-weight:700;color:#1d3e81}.token.list{color:#ed6a43}.token.inserted{background-color:#eaffea;color:#55a532}.token.deleted{background-color:#ffecec;color:#bd2c00}.token.bold{font-weight:700}.token.italic{font-style:italic}.language-json .token.property{color:#183691}.language-markup .token.tag .token.punctuation{color:#333}.language-css .token.function,code.language-css{color:#0086b3}.language-yaml .token.atrule{color:#63a35c}code.language-yaml{color:#183691}.language-ruby .token.function{color:#333}.language-markdown .token.url{color:#795da3}.language-makefile .token.symbol{color:#795da3}.language-makefile .token.variable{color:#183691}.language-makefile .token.builtin{color:#0086b3}.language-bash .token.keyword{color:#0086b3}pre[data-line]{position:relative;padding:1em 0 1em 3em}pre[data-line] .line-highlight-wrapper{position:absolute;top:0;left:0;background-color:transparent;display:block;width:100%}pre[data-line] .line-highlight{position:absolute;left:0;right:0;padding:inherit 0;margin-top:1em;background:hsla(24,20%,50%,.08);background:linear-gradient(to right,hsla(24,20%,50%,.1) 70%,hsla(24,20%,50%,0));pointer-events:none;line-height:inherit;white-space:pre}pre[data-line] .line-highlight:before,pre[data-line] .line-highlight[data-end]:after{content:attr(data-start);position:absolute;top:.4em;left:.6em;min-width:1em;padding:0 .5em;background-color:hsla(24,20%,50%,.4);color:#f4f1ef;font:bold 65%/1.5 sans-serif;text-align:center;vertical-align:.3em;border-radius:999px;text-shadow:none;box-shadow:0 1px #fff}pre[data-line] .line-highlight[data-end]:after{content:attr(data-end);top:auto;bottom:.4em}html body{font-family:'Helvetica Neue',Helvetica,'Segoe UI',Arial,freesans,sans-serif;font-size:16px;line-height:1.6;color:#333;background-color:#fff;overflow:initial;box-sizing:border-box;word-wrap:break-word}html body>:first-child{margin-top:0}html body h1,html body h2,html body h3,html body h4,html body h5,html body h6{line-height:1.2;margin-top:1em;margin-bottom:16px;color:#000}html body h1{font-size:2.25em;font-weight:300;padding-bottom:.3em}html body h2{font-size:1.75em;font-weight:400;padding-bottom:.3em}html body h3{font-size:1.5em;font-weight:500}html body h4{font-size:1.25em;font-weight:600}html body h5{font-size:1.1em;font-weight:600}html body h6{font-size:1em;font-weight:600}html body h1,html body h2,html body h3,html body h4,html body h5{font-weight:600}html body h5{font-size:1em}html body h6{color:#5c5c5c}html body strong{color:#000}html body del{color:#5c5c5c}html body a:not([href]){color:inherit;text-decoration:none}html body a{color:#08c;text-decoration:none}html body a:hover{color:#00a3f5;text-decoration:none}html body img{max-width:100%}html body>p{margin-top:0;margin-bottom:16px;word-wrap:break-word}html body>ol,html body>ul{margin-bottom:16px}html body ol,html body ul{padding-left:2em}html body ol.no-list,html body ul.no-list{padding:0;list-style-type:none}html body ol ol,html body ol ul,html body ul ol,html body ul ul{margin-top:0;margin-bottom:0}html body li{margin-bottom:0}html body li.task-list-item{list-style:none}html body li>p{margin-top:0;margin-bottom:0}html body .task-list-item-checkbox{margin:0 .2em .25em -1.8em;vertical-align:middle}html body .task-list-item-checkbox:hover{cursor:pointer}html body blockquote{margin:16px 0;font-size:inherit;padding:0 15px;color:#5c5c5c;background-color:#f0f0f0;border-left:4px solid #d6d6d6}html body blockquote>:first-child{margin-top:0}html body blockquote>:last-child{margin-bottom:0}html body hr{height:4px;margin:32px 0;background-color:#d6d6d6;border:0 none}html body table{margin:10px 0 15px 0;border-collapse:collapse;border-spacing:0;display:block;width:100%;overflow:auto;word-break:normal;word-break:keep-all}html body table th{font-weight:700;color:#000}html body table td,html body table th{border:1px solid #d6d6d6;padding:6px 13px}html body dl{padding:0}html body dl dt{padding:0;margin-top:16px;font-size:1em;font-style:italic;font-weight:700}html body dl dd{padding:0 16px;margin-bottom:16px}html body code{font-family:Menlo,Monaco,Consolas,'Courier New',monospace;font-size:.85em;color:#000;background-color:#f0f0f0;border-radius:3px;padding:.2em 0}html body code::after,html body code::before{letter-spacing:-.2em;content:'\00a0'}html body pre>code{padding:0;margin:0;word-break:normal;white-space:pre;background:0 0;border:0}html body .highlight{margin-bottom:16px}html body .highlight pre,html body pre{padding:1em;overflow:auto;line-height:1.45;border:#d6d6d6;border-radius:3px}html body .highlight pre{margin-bottom:0;word-break:normal}html body pre code,html body pre tt{display:inline;max-width:initial;padding:0;margin:0;overflow:initial;line-height:inherit;word-wrap:normal;background-color:transparent;border:0}html body pre code:after,html body pre code:before,html body pre tt:after,html body pre tt:before{content:normal}html body blockquote,html body dl,html body ol,html body p,html body pre,html body ul{margin-top:0;margin-bottom:16px}html body kbd{color:#000;border:1px solid #d6d6d6;border-bottom:2px solid #c7c7c7;padding:2px 4px;background-color:#f0f0f0;border-radius:3px}@media print{html body{background-color:#fff}html body h1,html body h2,html body h3,html body h4,html body h5,html body h6{color:#000;page-break-after:avoid}html body blockquote{color:#5c5c5c}html body pre{page-break-inside:avoid}html body table{display:table}html body img{display:block;max-width:100%;max-height:100%}html body code,html body pre{word-wrap:break-word;white-space:pre}}.markdown-preview{width:100%;height:100%;box-sizing:border-box}.markdown-preview ul{list-style:disc}.markdown-preview ul ul{list-style:circle}.markdown-preview ul ul ul{list-style:square}.markdown-preview ol{list-style:decimal}.markdown-preview ol ol,.markdown-preview ul ol{list-style-type:lower-roman}.markdown-preview ol ol ol,.markdown-preview ol ul ol,.markdown-preview ul ol ol,.markdown-preview ul ul ol{list-style-type:lower-alpha}.markdown-preview .newpage,.markdown-preview .pagebreak{page-break-before:always}.markdown-preview pre.line-numbers{position:relative;padding-left:3.8em;counter-reset:linenumber}.markdown-preview pre.line-numbers>code{position:relative}.markdown-preview pre.line-numbers .line-numbers-rows{position:absolute;pointer-events:none;top:1em;font-size:100%;left:0;width:3em;letter-spacing:-1px;border-right:1px solid #999;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}.markdown-preview pre.line-numbers .line-numbers-rows>span{pointer-events:none;display:block;counter-increment:linenumber}.markdown-preview pre.line-numbers .line-numbers-rows>span:before{content:counter(linenumber);color:#999;display:block;padding-right:.8em;text-align:right}.markdown-preview .mathjax-exps .MathJax_Display{text-align:center!important}.markdown-preview:not([data-for=preview]) .code-chunk .code-chunk-btn-group{display:none}.markdown-preview:not([data-for=preview]) .code-chunk .status{display:none}.markdown-preview:not([data-for=preview]) .code-chunk .output-div{margin-bottom:16px}.markdown-preview .md-toc{padding:0}.markdown-preview .md-toc .md-toc-link-wrapper .md-toc-link{display:inline;padding:.25rem 0}.markdown-preview .md-toc .md-toc-link-wrapper .md-toc-link div,.markdown-preview .md-toc .md-toc-link-wrapper .md-toc-link p{display:inline}.markdown-preview .md-toc .md-toc-link-wrapper.highlighted .md-toc-link{font-weight:800}.scrollbar-style::-webkit-scrollbar{width:8px}.scrollbar-style::-webkit-scrollbar-track{border-radius:10px;background-color:transparent}.scrollbar-style::-webkit-scrollbar-thumb{border-radius:5px;background-color:rgba(150,150,150,.66);border:4px solid rgba(150,150,150,.66);background-clip:content-box}html body[for=html-export]:not([data-presentation-mode]){position:relative;width:100%;height:100%;top:0;left:0;margin:0;padding:0;overflow:auto}html body[for=html-export]:not([data-presentation-mode]) .markdown-preview{position:relative;top:0;min-height:100vh}@media screen and (min-width:914px){html body[for=html-export]:not([data-presentation-mode]) .markdown-preview{padding:2em calc(50% - 457px + 2em)}}@media screen and (max-width:914px){html body[for=html-export]:not([data-presentation-mode]) .markdown-preview{padding:2em}}@media screen and (max-width:450px){html body[for=html-export]:not([data-presentation-mode]) .markdown-preview{font-size:14px!important;padding:1em}}@media print{html body[for=html-export]:not([data-presentation-mode]) #sidebar-toc-btn{display:none}}html body[for=html-export]:not([data-presentation-mode]) #sidebar-toc-btn{position:fixed;bottom:8px;left:8px;font-size:28px;cursor:pointer;color:inherit;z-index:99;width:32px;text-align:center;opacity:.4}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] #sidebar-toc-btn{opacity:1}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc{position:fixed;top:0;left:0;width:300px;height:100%;padding:32px 0 48px 0;font-size:14px;box-shadow:0 0 4px rgba(150,150,150,.33);box-sizing:border-box;overflow:auto;background-color:inherit}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar{width:8px}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar-track{border-radius:10px;background-color:transparent}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar-thumb{border-radius:5px;background-color:rgba(150,150,150,.66);border:4px solid rgba(150,150,150,.66);background-clip:content-box}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc a{text-decoration:none}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc .md-toc{padding:0 16px}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc .md-toc .md-toc-link-wrapper .md-toc-link{display:inline;padding:.25rem 0}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc .md-toc .md-toc-link-wrapper .md-toc-link div,html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc .md-toc .md-toc-link-wrapper .md-toc-link p{display:inline}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc .md-toc .md-toc-link-wrapper.highlighted .md-toc-link{font-weight:800}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview{left:300px;width:calc(100% - 300px);padding:2em calc(50% - 457px - 300px / 2);margin:0;box-sizing:border-box}@media screen and (max-width:1274px){html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview{padding:2em}}@media screen and (max-width:450px){html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview{width:100%}}html body[for=html-export]:not([data-presentation-mode]):not([html-show-sidebar-toc]) .markdown-preview{left:50%;transform:translateX(-50%)}html body[for=html-export]:not([data-presentation-mode]):not([html-show-sidebar-toc]) .md-sidebar-toc{display:none}
+/* Please visit the URL below for more information: */
+/*   https://shd101wyy.github.io/markdown-preview-enhanced/#/customize-css */
+
+      </style>
+      <!-- The content below will be included at the end of the <head> element. --><script type="text/javascript">
+  document.addEventListener("DOMContentLoaded", function () {
+    // your code here
+  });
+</script></head><body for="html-export">
+    
+    
+      <div class="crossnote markdown-preview  ">
+      
+<h1 id="repaso-rápido-de-conceptos-básicos-de-snowflake">Repaso Rápido de Conceptos Básicos de Snowflake </h1>
+<h2 id="qué-es-snowflake">¿Qué es Snowflake? </h2>
+<p>Snowflake es un servicio de almacenamiento de datos en la nube que ofrece una solución única para el almacenamiento y análisis de datos.</p>
+<p>Su arquitectura innovadora permite a las organizaciones escalar recursos de manera eficiente, asegurando una gestión de datos ágil y rentable.</p>
+<p>Snowflake se diferencia de otras soluciones de almacenamiento de datos debido a su flexibilidad, escalabilidad y facilidad de uso, haciéndolo ideal para una amplia gama de aplicaciones de análisis de datos.</p>
+<h2 id="características-clave-de-snowflake">Características Clave de Snowflake </h2>
+<ul>
+<li><strong>Almacenamiento y Computación Separados</strong>: Esta característica permite a los usuarios escalar el almacenamiento y la computación independientemente, optimizando los costos y mejorando el rendimiento.</li>
+<li><strong>Elasticidad</strong>: Snowflake ofrece la capacidad de ajustar los recursos computacionales de forma automática, adaptándose a las necesidades de trabajo y garantizando un rendimiento óptimo.</li>
+<li><strong>Soporte para Datos Estructurados y Semi-Estructurados</strong>: Snowflake maneja una variedad de formatos de datos, lo que lo hace versátil para diferentes tipos de análisis de datos.</li>
+<li><strong>Seguridad de Datos</strong>: Con características de seguridad robustas, Snowflake asegura que los datos estén protegidos y cumplan con las normativas de privacidad y seguridad.</li>
+</ul>
+<h2 id="arquitectura-de-snowflake">Arquitectura de Snowflake </h2>
+<h3 id="arquitectura-general">Arquitectura General </h3>
+<ul>
+<li><strong>Diseño Basado en la Nube</strong>: Snowflake utiliza una arquitectura basada en la nube, lo que permite un almacenamiento y procesamiento de datos altamente eficiente y escalable. Esta arquitectura aprovecha la flexibilidad y el poder de la infraestructura en la nube.</li>
+<li><strong>Capas principales</strong>:
+<ul>
+<li>la capa de almacenamiento de datos</li>
+<li>la capa de procesamiento (o de computación)</li>
+<li>la capa de servicios</li>
+</ul>
+</li>
+</ul>
+<h4 id="capa-de-almacenamiento-de-datos">Capa de Almacenamiento de Datos </h4>
+<ul>
+<li><strong>Diseño Basado en la Nube</strong>: Snowflake utiliza el almacenamiento en la nube, lo que permite un almacenamiento de datos prácticamente ilimitado.</li>
+<li><strong>Almacenamiento de Datos Estructurados y Semi-Estructurados</strong>: Puede almacenar una amplia variedad de formatos de datos, desde datos estructurados en tablas tradicionales hasta formatos semi-estructurados como JSON, Avro, XML, y Parquet.</li>
+</ul>
+<h4 id="capa-de-procesamiento-o-de-computación">Capa de Procesamiento (o de Computación) </h4>
+<ul>
+<li><strong>Separación del Almacenamiento y la Computación</strong>: Permite a los usuarios escalar la capacidad de procesamiento de forma independiente del almacenamiento de datos.</li>
+<li><strong>Clusters Virtuales (Warehouses)</strong>: Los usuarios pueden crear múltiples clusters virtuales para diferentes necesidades de procesamiento, asegurando que los recursos se utilizan de manera eficiente.</li>
+</ul>
+<h4 id="capa-de-servicios">Capa de Servicios </h4>
+<ul>
+<li><strong>Gestión Automatizada</strong>: Snowflake maneja automáticamente aspectos como ajustes de configuración, optimización del rendimiento y parches de seguridad.</li>
+<li><strong>Interfaz de Usuario y SQL</strong>: Proporciona una interfaz de usuario intuitiva y soporta el uso de SQL para manipular y consultar datos, facilitando su uso para una amplia gama de usuarios.</li>
+</ul>
+<h3 id="beneficios-de-la-arquitectura-de-snowflake">Beneficios de la Arquitectura de Snowflake </h3>
+<ul>
+<li><strong>Escalabilidad y Flexibilidad</strong>: La arquitectura de Snowflake permite a las empresas adaptar sus recursos de almacenamiento y procesamiento a las necesidades cambiantes, sin incurrir en un costo prohibitivo.</li>
+<li><strong>Rendimiento Optimizado</strong>: La capacidad de escalar recursos de computación de forma independiente mejora significativamente el rendimiento de las consultas.</li>
+<li><strong>Seguridad y Confiabilidad</strong>: Las avanzadas características de seguridad garantizan la protección y privacidad de los datos.</li>
+</ul>
+<h2 id="capacidades-básicas-de-snowflake">Capacidades Básicas de Snowflake </h2>
+<h3 id="almacenamiento-de-datos">Almacenamiento de Datos </h3>
+<ul>
+<li><strong>Tipos de Datos</strong>: Snowflake puede almacenar una variedad de tipos de datos, incluyendo datos estructurados (como en tablas SQL tradicionales) y datos semi-estructurados (como JSON, XML, Avro, y Parquet).</li>
+<li><strong>Métodos y Formatos de Carga de Datos</strong>: Snowflake permite la carga de datos a través de varios métodos, como cargar directamente desde fuentes de datos en la nube, usar herramientas de integración de datos, o realizar cargas por lotes. Admite formatos de archivo comunes como CSV, JSON, Parquet, Avro, ORC, y XML.</li>
+</ul>
+<h3 id="procesamiento-de-consultas">Procesamiento de Consultas </h3>
+<ul>
+<li><strong>Procesamiento de Consultas en Snowflake</strong>: Snowflake procesa consultas utilizando su motor de procesamiento distribuido y altamente eficiente. Esto permite ejecutar consultas complejas sobre grandes conjuntos de datos con rapidez.</li>
+<li><strong>Rendimiento y Optimización de Consultas</strong>: Snowflake optimiza automáticamente las consultas para un rendimiento eficiente. Los usuarios también pueden influir en el rendimiento mediante la gestión de warehouses (clusters de computación) y el ajuste de sus tamaños según las necesidades de carga de trabajo.</li>
+</ul>
+<h3 id="seguridad-y-gobernanza-de-datos">Seguridad y Gobernanza de Datos </h3>
+<ul>
+<li><strong>Funciones de Seguridad en Snowflake</strong>: Snowflake ofrece una gama de características de seguridad, incluyendo cifrado en reposo y en tránsito, control de acceso basado en roles, autenticación multifactor y políticas de seguridad de red.</li>
+<li><strong>Importancia de la Seguridad en el Manejo de Datos</strong>: La seguridad es fundamental en Snowflake para garantizar la protección de datos sensibles y el cumplimiento de normativas y leyes de privacidad de datos. Snowflake proporciona un entorno seguro para almacenar y procesar datos, lo que es crucial para empresas de todos los tamaños y sectores.</li>
+</ul>
+<h2 id="casos-de-uso-comunes-de-snowflake">Casos de Uso Comunes de Snowflake </h2>
+<ul>
+<li><strong>Inteligencia Empresarial (BI)</strong>: Utilización de Snowflake para el análisis y visualización de datos, ayudando a las empresas a tomar decisiones informadas basadas en datos.</li>
+<li><strong>Análisis de Datos a Gran Escala</strong>: Uso de Snowflake para manejar y analizar grandes volúmenes de datos, lo que permite descubrir insights valiosos y tendencias.</li>
+<li><strong>Data Warehousing</strong>: Almacenamiento de grandes cantidades de datos históricos en Snowflake para su consulta y análisis.</li>
+<li><strong>Ciencia de Datos y Aprendizaje Automático</strong>: Preparación y almacenamiento de datos en Snowflake para proyectos de ciencia de datos y machine learning.</li>
+<li><strong>Reporte y Análisis Financiero</strong>: Uso de Snowflake para recopilar y analizar datos financieros, mejorando la precisión y eficiencia de los informes financieros.</li>
+</ul>
+<h2 id="actividades-de-repaso-en-snowflake">Actividades de Repaso en Snowflake </h2>
+<ol>
+<li>
+<p><strong>¿Cuál de las siguientes opciones NO es una característica de Snowflake?</strong><br>
+a) Escalabilidad automática<br>
+b) Almacenamiento y computación separados<br>
+c) Requiere hardware físico en las instalaciones del usuario<br>
+d) Soporte para datos estructurados y semi-estructurados</p>
+</li>
+<li>
+<p><strong>¿Qué permite la arquitectura de almacenamiento y computación separados en Snowflake?</strong><br>
+a) Menor seguridad en los datos almacenados<br>
+b) Aumento del costo de almacenamiento de datos<br>
+c) Escalar el almacenamiento y la computación de manera independiente<br>
+d) Reducción en la flexibilidad de gestión de datos</p>
+</li>
+<li>
+<p><strong>Snowflake utiliza una arquitectura basada en la nube que separa el almacenamiento de la computación.</strong></p>
+</li>
+<li>
+<p><strong>En Snowflake, la escalabilidad de recursos se realiza manualmente por el usuario.</strong></p>
+</li>
+<li>
+<p><strong>¿Qué tipo de datos puede almacenar Snowflake?</strong><br>
+a) Solo estructurados<br>
+b) Solo semi-estructurados<br>
+c) Tanto estructurados como semi-estructurados<br>
+d) Ninguno de los anteriores</p>
+</li>
+<li>
+<p><strong>¿Cuál es una ventaja clave de la arquitectura de Snowflake?</strong><br>
+a) Requiere mantenimiento constante<br>
+b) Escalabilidad y eficiencia de costos<br>
+c) Almacenamiento ilimitado en las instalaciones<br>
+d) Complejidad aumentada en la gestión de datos</p>
+</li>
+<li>
+<p><strong>Las tablas en Snowflake no admiten datos en formato JSON.</strong></p>
+</li>
+<li>
+<p><strong>Snowflake ofrece la capacidad de ajustar automáticamente los recursos computacionales según la demanda.</strong></p>
+</li>
+<li>
+<p><strong>La tarificación de Snowflake se realiza por</strong>:<br>
+a) Minuto<br>
+b) Segundo<br>
+c) Hora<br>
+d) Día</p>
+</li>
+<li>
+<p><strong>Snowflake guarda internamente los datos en un formato</strong>:<br>
+a) Columnar<br>
+b) Row-based<br>
+c) Según el tipo de dato<br>
+d) Lo decide el usuario</p>
+</li>
+</ol>
+<h1 id="tipos-de-tabla-en-snowflake">Tipos de Tabla en Snowflake </h1>
+<p>Snowflake soporta diferentes tipos de tablas para adaptarse a variados requisitos y escenarios de uso. Estos tipos incluyen tablas permanentes, transitorias, temporales y externas, cada una con sus propias características y aplicaciones.</p>
+<h2 id="conceptos-previos">Conceptos previos: </h2>
+<p>Snowflake incluye características únicas como Fail-safe y Time Travel, que mejoran la seguridad y flexibilidad en la gestión de datos.</p>
+<h2 id="time-travel">Time Travel </h2>
+<ul>
+<li><strong>Descripción</strong>: Time Travel permite a los usuarios acceder y restaurar datos a un estado anterior dentro de un período específico.</li>
+<li><strong>Funcionalidad</strong>:
+<ul>
+<li><strong>Acceso a Datos Históricos</strong>: Los usuarios pueden consultar versiones anteriores de los datos, lo que es útil para recuperar datos perdidos o modificados accidentalmente.</li>
+<li><strong>Duración</strong>: Snowflake permite viajar en el tiempo hasta 90 días, dependiendo de la edición de Snowflake utilizada.</li>
+</ul>
+</li>
+<li><strong>Aplicaciones</strong>:
+<ul>
+<li><strong>Recuperación de Datos</strong>: Restaurar tablas o bases de datos a un punto anterior en el tiempo.</li>
+<li><strong>Análisis Histórico</strong>: Realizar análisis sobre cómo los datos han cambiado a lo largo del tiempo.</li>
+</ul>
+</li>
+</ul>
+<h2 id="fail-safe">Fail-safe </h2>
+<ul>
+<li><strong>Descripción</strong>: Fail-safe es una capa adicional de protección que garantiza la recuperación de datos en caso de una falla catastrófica o corrupción de datos.</li>
+<li><strong>Funcionalidad</strong>:
+<ul>
+<li><strong>Periodo de Protección</strong>: Proporciona una ventana de tiempo adicional (generalmente 7 días después del período de Time Travel) durante la cual Snowflake mantiene los datos.</li>
+<li><strong>Recuperación de Datos</strong>: En caso de pérdida o corrupción de datos, Snowflake puede utilizar los datos de Fail-safe para la recuperación, aunque este proceso requiere la intervención del equipo de soporte de Snowflake.</li>
+</ul>
+</li>
+<li><strong>Uso</strong>:
+<ul>
+<li><strong>Protección contra Desastres</strong>: Asegura la disponibilidad de datos críticos incluso en situaciones extremas.</li>
+<li><strong>Último Recurso para Recuperación de Datos</strong>: Utilizado cuando se necesita recuperar datos más allá del período de Time Travel.</li>
+</ul>
+</li>
+</ul>
+<p>Aunque Time Travel y Fail-safe en Snowflake pueden parecer similares, cada uno cumple un rol distinto en la gestión y protección de datos.</p>
+<h2 id="time-travel-1">Time Travel </h2>
+<ul>
+<li><strong>Propósito Principal</strong>: Time Travel está diseñado principalmente para la flexibilidad y conveniencia del usuario. Permite a los usuarios acceder a datos antiguos y restaurarlos si se han eliminado o modificado accidentalmente.</li>
+<li><strong>Uso Cotidiano</strong>: Es una herramienta poderosa para tareas diarias como recuperación de datos eliminados, auditoría, y análisis de cómo los datos han cambiado con el tiempo.</li>
+<li><strong>Limitación de Tiempo</strong>: Time Travel solo permite acceder a datos hasta un máximo de 90 días (según la edición de Snowflake).</li>
+</ul>
+<h2 id="fail-safe-1">Fail-safe </h2>
+<ul>
+<li><strong>Propósito Principal</strong>: Fail-safe actúa como una red de seguridad adicional para protección de datos en casos de fallas catastróficas o corrupción de datos, donde los mecanismos normales de recuperación no son suficientes.</li>
+<li><strong>Protección Extendida</strong>: Ofrece una ventana adicional (generalmente 7 días después del período de Time Travel) para la recuperación de datos críticos, pero requiere intervención del equipo de soporte de Snowflake.</li>
+<li><strong>No Accesible Directamente por Usuarios</strong>: A diferencia de Time Travel, Fail-safe no está diseñado para el acceso directo o regular de los usuarios. Es más una medida de seguridad operada por Snowflake para casos extremos.</li>
+</ul>
+<h2 id="complementariedad">Complementariedad </h2>
+<ul>
+<li><strong>Cobertura Completa</strong>: Mientras que Time Travel proporciona flexibilidad y autonomía a los usuarios para gestionar y revisar datos históricos, Fail-safe ofrece una capa adicional de protección contra pérdidas de datos imprevistas o desastres.</li>
+<li><strong>Seguridad y Confiabilidad</strong>: La combinación de Time Travel y Fail-safe asegura que los datos estén seguros y sean recuperables, maximizando la seguridad y minimizando el riesgo de pérdida de datos.</li>
+</ul>
+<p>En resumen, Time Travel y Fail-safe se complementan para ofrecer una solución completa de gestión y recuperación de datos, brindando a los usuarios de Snowflake tranquilidad y control sobre sus datos.<br>
+Time Travel y Fail</p>
+<h2 id="permanent-tables-tablas-permanentes">Permanent Tables (Tablas Permanentes) </h2>
+<ul>
+<li><strong>Descripción</strong>: Son las tablas estándar en Snowflake que almacenan datos de forma permanente.</li>
+<li><strong>Casos de Uso</strong>: Ideales para almacenar datos operativos y de negocio críticos que requieren alta durabilidad y disponibilidad.</li>
+<li><strong>Características</strong>: Mantienen un historial completo de cambios de datos, soportan Time Travel y Fail-safe.</li>
+</ul>
+<h2 id="transient-tables-tablas-transitorias">Transient Tables (Tablas Transitorias) </h2>
+<ul>
+<li><strong>Descripción</strong>: Similar a las tablas permanentes, pero con un menor costo de almacenamiento de historial de datos.</li>
+<li><strong>Casos de Uso</strong>: Apropiadas para datos que no requieren Fail-safe, como datos temporales o de proyectos a corto plazo.</li>
+<li><strong>Características</strong>: Proporcionan Time Travel, pero no tienen Fail-safe, lo que reduce el costo de almacenamiento a largo plazo.</li>
+</ul>
+<h2 id="temporary-tables-tablas-temporales">Temporary Tables (Tablas Temporales) </h2>
+<ul>
+<li><strong>Descripción</strong>: Tablas que existen solo durante la duración de una sesión de usuario y se eliminan automáticamente al final de la sesión.</li>
+<li><strong>Casos de Uso</strong>: Útiles para almacenar resultados intermedios de consultas o para operaciones de análisis de datos que no necesitan persistencia.</li>
+<li><strong>Características</strong>: No son visibles para otros usuarios y no ocupan espacio de almacenamiento a largo plazo.</li>
+</ul>
+<h2 id="external-tables-tablas-externas">External Tables (Tablas Externas) </h2>
+<ul>
+<li><strong>Descripción</strong>: Permiten acceder a los datos almacenados en fuentes externas, como Amazon S3, sin necesidad de cargarlos en Snowflake.</li>
+<li><strong>Casos de Uso</strong>: Ideales para situaciones donde los datos necesitan permanecer en su ubicación original por razones de acceso, seguridad o costos.</li>
+<li><strong>Características</strong>: Proporcionan una manera de consultar datos externos como si estuvieran almacenados dentro de Snowflake.</li>
+</ul>
+<h2 id="diferencias-clave">Diferencias Clave </h2>
+<ul>
+<li><strong>Durabilidad y Persistencia</strong>: Las tablas permanentes y transitorias ofrecen persistencia, mientras que las tablas temporales no.</li>
+<li><strong>Costo y Gestión de Datos</strong>: Las tablas transitorias y temporales son más rentables para datos temporales o menos críticos.</li>
+<li><strong>Integración con Datos Externos</strong>: Solo las tablas externas permiten trabajar con datos almacenados fuera de Snowflake.</li>
+</ul>
+<h2 id="comparativa-de-tipos-de-tabla">Comparativa de Tipos de Tabla </h2>
+<table>
+<thead>
+<tr>
+<th>Tipo de Tabla</th>
+<th>Descripción</th>
+<th>Persistencia de Datos</th>
+<th>Time Travel</th>
+<th>Fail-safe</th>
+<th>Casos de Uso</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Permanent</td>
+<td>Almacena datos de manera permanente. Utilizadas para datos críticos y operativos.</td>
+<td>Alta</td>
+<td>Sí</td>
+<td>Sí</td>
+<td>Datos operativos, almacenamiento a largo plazo.</td>
+</tr>
+<tr>
+<td>Transient</td>
+<td>Similar a las permanentes pero con menor costo de almacenamiento de historial.</td>
+<td>Media</td>
+<td>Sí</td>
+<td>No</td>
+<td>Proyectos a corto plazo, datos temporales.</td>
+</tr>
+<tr>
+<td>Temporary</td>
+<td>Existencia limitada a la duración de la sesión de usuario.</td>
+<td>Ninguna</td>
+<td>No</td>
+<td>No</td>
+<td>Resultados intermedios de consultas, análisis temporal.</td>
+</tr>
+<tr>
+<td>External</td>
+<td>Acceso a datos almacenados en fuentes externas.</td>
+<td>Depende de la fuente externa</td>
+<td>Depende de la fuente externa</td>
+<td>Depende de la fuente externa</td>
+<td>Datos que deben permanecer en su ubicación original.</td>
+</tr>
+</tbody>
+</table>
+<h1 id="almacenamiento-interno-de-datos-en-snowflake">Almacenamiento Interno de Datos en Snowflake </h1>
+<p>Snowflake emplea técnicas avanzadas para el almacenamiento interno de datos, optimizando el rendimiento y la escalabilidad. Aquí están los aspectos clave:</p>
+<h2 id="almacenamiento-columnar">Almacenamiento Columnar </h2>
+<ul>
+<li><strong>Descripción</strong>: Utiliza un modelo de almacenamiento basado en columnas.</li>
+<li><strong>Ventajas</strong>: Eficiencia en operaciones de análisis y consultas, mejor compresión de datos.</li>
+</ul>
+<h2 id="compresión-de-datos">Compresión de Datos </h2>
+<ul>
+<li><strong>Automatización</strong>: Los datos se comprimen automáticamente al ser almacenados.</li>
+<li><strong>Beneficio</strong>: Reducción significativa del espacio de almacenamiento necesario.</li>
+</ul>
+<h2 id="particionamiento-de-datos">Particionamiento de Datos </h2>
+<ul>
+<li><strong>Micro-particiones</strong>: Divide los datos en micro-particiones de 16 MB a 64 MB (comprimidos).</li>
+<li><strong>Función</strong>: Optimización para operaciones de I/O eficientes y manejo de grandes volúmenes de datos.</li>
+</ul>
+<h2 id="metadata-store">Metadata Store </h2>
+<ul>
+<li><strong>Almacén de Metadatos</strong>: Mantiene un almacén de metadatos dinámico y distribuido.</li>
+<li><strong>Propósito</strong>: Gestión y optimización de las consultas, con información detallada sobre los datos almacenados.</li>
+</ul>
+<h2 id="inmutabilidad-de-los-datos">Inmutabilidad de los Datos </h2>
+<ul>
+<li><strong>Enfoque de Datos Inmutables</strong>: Las operaciones de escritura no sobrescriben los datos existentes.</li>
+<li><strong>Características</strong>: Creación de nuevas micro-particiones para datos actualizados, manteniendo versiones anteriores para Time Travel y Fail-safe.</li>
+</ul>
+<h2 id="almacenamiento-en-la-nube">Almacenamiento en la Nube </h2>
+<ul>
+<li><strong>Integración con la Nube</strong>: Almacena datos en servicios de almacenamiento en la nube de proveedores como AWS S3, Azure Blob Storage o Google Cloud Storage.</li>
+<li><strong>Beneficios</strong>: Escalabilidad, durabilidad y alta disponibilidad.</li>
+</ul>
+<hr>
+<h1 id="clustering-keys-en-snowflake-alternativa-a-los-índices-tradicionales">Clustering Keys en Snowflake: Alternativa a los Índices Tradicionales </h1>
+<p>Snowflake utiliza Clustering Keys como una alternativa a los índices en las bases de datos relacionales tradicionales para optimizar el rendimiento de las consultas.</p>
+<h2 id="qué-son-las-clustering-keys">¿Qué son las Clustering Keys? </h2>
+<p>Las Clustering Keys en Snowflake son especificaciones en las tablas que informan cómo Snowflake debe organizar los datos dentro de las micro-particiones.</p>
+<h2 id="funcionamiento-de-las-clustering-keys">Funcionamiento de las Clustering Keys </h2>
+<ul>
+<li><strong>Organización de Datos</strong>: Las Clustering Keys informan a Snowflake cómo organizar los datos dentro de las micro-particiones. Al especificar una Clustering Key, estás indicando a Snowflake que mantenga los datos con valores similares de esa columna cerca uno del otro.</li>
+<li><strong>Mejora en el Rendimiento</strong>: Esta organización optimizada reduce significativamente la cantidad de datos escaneados durante una consulta, lo que mejora el rendimiento de las consultas.</li>
+<li><strong>Actualización Automática</strong>: Snowflake reorganiza automáticamente los datos en las micro-particiones basándose en las Clustering Keys, aunque en algunos casos puede ser necesario un re-clustering manual para mantener la eficiencia.</li>
+</ul>
+<h2 id="ventajas-de-las-clustering-keys">Ventajas de las Clustering Keys </h2>
+<ul>
+<li><strong>Mejora del Rendimiento de Consultas</strong>: Optimizan la eficiencia de las consultas al reducir la cantidad de datos escaneados.</li>
+<li><strong>Gestión Automática</strong>: Snowflake maneja automáticamente el reordenamiento y mantenimiento de las micro-particiones según las Clustering Keys, lo que reduce la necesidad de intervención manual.</li>
+<li><strong>Flexibilidad</strong>: Las Clustering Keys se pueden modificar según cambien los patrones de acceso a los datos, lo que proporciona flexibilidad para ajustarse a diferentes patrones de uso.</li>
+</ul>
+<h2 id="diferencias-con-índices-tradicionales">Diferencias con Índices Tradicionales </h2>
+<ul>
+<li><strong>Mantenimiento y Costo</strong>: A diferencia de los índices en bases de datos tradicionales, las Clustering Keys no requieren un mantenimiento manual intensivo ni generan un costo adicional significativo de almacenamiento.</li>
+<li><strong>Implementación</strong>: En Snowflake, el uso de Clustering Keys es más sutil y automatizado en comparación con la creación y gestión activa de índices en sistemas tradicionales.</li>
+</ul>
+<h2 id="casos-de-uso">Casos de Uso </h2>
+<ul>
+<li><strong>Consultas sobre Grandes Conjuntos de Datos</strong>: Particularmente útiles para mejorar el rendimiento de consultas en tablas grandes donde ciertas columnas son frecuentemente accedidas o filtradas.</li>
+</ul>
+<h2 id="ejemplos-de-uso">Ejemplos de Uso </h2>
+<ul>
+<li><strong>Datos de Ventas</strong>: En una tabla que almacena datos de ventas, podrías usar la fecha de venta como Clustering Key. Esto agruparía las ventas por fechas similares, optimizando las consultas que filtran por un rango de fechas específico.</li>
+<li><strong>Gestión de Inventario</strong>: En una tabla de inventario, la Clustering Key podría ser el ID de categoría de producto, lo que facilitaría las consultas rápidas para obtener información sobre productos de una categoría específica.</li>
+<li><strong>Análisis Financiero</strong>: Una empresa podría utilizar una Clustering Key basada en regiones geográficas en su tabla de transacciones financieras. Esto permitiría consultas más rápidas y eficientes para análisis financieros regionales.</li>
+<li><strong>Optimización de Consultas en Retail</strong>: Un retailer online puede utilizar Clustering Keys basadas en el ID del cliente para optimizar las consultas relacionadas con el historial de compras y preferencias de los clientes.</li>
+</ul>
+<h2 id="consideraciones-al-elegir-clustering-keys">Consideraciones al Elegir Clustering Keys </h2>
+<ul>
+<li><strong>Patrones de Acceso a los Datos</strong>: Elige Clustering Keys basándote en cómo se acceden y consultan los datos. Las columnas que se usan frecuentemente en filtros de consultas son buenos candidatos.</li>
+<li><strong>Cambios en el Uso de Datos</strong>: Las Clustering Keys pueden necesitar ajustes si los patrones de acceso a los datos cambian con el tiempo.</li>
+</ul>
+<h1 id="selección-de-clustering-keys-en-snowflake">Selección de Clustering Keys en Snowflake </h1>
+<p>La selección de Clustering Keys en Snowflake es un proceso importante para optimizar el rendimiento de las consultas. Aquí detallamos cómo seleccionarlas y las consideraciones a tener en cuenta.</p>
+<ul>
+<li><strong>Identificar Patrones de Consulta</strong>: Observar los patrones comunes en las consultas de tu base de datos. Las columnas que se usan con frecuencia en los filtros (<code>WHERE</code> clauses) son candidatas ideales.</li>
+<li><strong>Considerar la Cardinalidad</strong>: Las columnas con alta cardinalidad (gran cantidad de valores únicos) pueden ser buenas Clustering Keys, especialmente si se consultan regularmente.</li>
+<li><strong>Combinar Columnas</strong>: Se pueden combinar múltiples columnas como Clustering Keys. Esta combinación es útil si las consultas comúnmente filtran utilizando esas columnas en conjunto.</li>
+</ul>
+<h2 id="selección-de-columnas-dispares">Selección de Columnas Dispares </h2>
+<ul>
+<li><strong>Viabilidad</strong>: Es técnicamente posible seleccionar columnas muy dispares como Clustering Keys.</li>
+<li><strong>Eficiencia</strong>: La eficiencia depende de cómo las consultas interactúan con estas columnas. Si las consultas rara vez usan las columnas en conjunto, la efectividad del clustering podría no ser óptima.</li>
+<li><strong>Análisis de Consultas</strong>: Analiza las consultas para asegurarte de que la combinación de columnas dispares como Clustering Keys coincida con los patrones de acceso a los datos.</li>
+</ul>
+<h2 id="ejemplo-práctico">Ejemplo Práctico </h2>
+<ul>
+<li><strong>Datos de Ventas</strong>: Si una tabla de ventas se consulta frecuentemente tanto por <code>fecha</code> como por <code>region</code>, combinar estas dos columnas como Clustering Keys puede optimizar el rendimiento de las consultas que filtran por ambas.</li>
+</ul>
+<h2 id="consideraciones-al-elegir-clustering-keys-1">Consideraciones al Elegir Clustering Keys </h2>
+<ul>
+<li><strong>Cambios en los Patrones de Consulta</strong>: Las Clustering Keys pueden necesitar ajustes si los patrones de consulta cambian con el tiempo.</li>
+<li><strong>Monitorización y Ajuste</strong>: Monitorizar regularmente el rendimiento de las consultas y ajusta las Clustering Keys según sea necesario.</li>
+</ul>
+<hr>
+<h1 id="tipos-de-vista-en-snowflake">Tipos de Vista en Snowflake </h1>
+<p>Snowflake ofrece diferentes tipos de vistas para facilitar el acceso y la gestión de los datos.</p>
+<p>Estos incluyen vistas regulares, materializadas y seguras, cada una con sus propias características y aplicaciones.</p>
+<h2 id="regular-views-vistas-regulares">Regular Views (Vistas Regulares) </h2>
+<ul>
+<li><strong>Descripción</strong>: Las vistas regulares son consultas almacenadas que se ejecutan cuando se accede a la vista.</li>
+<li><strong>Implementación</strong>: Se crean usando la instrucción SQL <code>CREATE VIEW</code> y se actualizan dinámicamente al cambiar los datos subyacentes.</li>
+<li><strong>Aspectos de Seguridad</strong>: Las vistas regulares heredan los permisos de los objetos de datos subyacentes y pueden ser utilizadas para ocultar detalles de implementación o restringir el acceso a ciertas columnas.</li>
+</ul>
+<h2 id="materialized-views-vistas-materializadas">Materialized Views (Vistas Materializadas) </h2>
+<ul>
+<li><strong>Descripción</strong>: Son vistas que almacenan físicamente el resultado de la consulta, proporcionando un acceso más rápido a los datos.</li>
+<li><strong>Implementación</strong>: Se crean con <code>CREATE MATERIALIZED VIEW</code> y requieren actualización periódica o automática para reflejar los cambios en los datos originales.</li>
+<li><strong>Aspectos de Seguridad</strong>: Al igual que las vistas regulares, las vistas materializadas implementan controles de seguridad basados en permisos, y pueden ser utilizadas para optimizar el rendimiento de consultas frecuentes y pesadas.</li>
+</ul>
+<h2 id="secure-views-vistas-seguras">Secure Views (Vistas Seguras) </h2>
+<ul>
+<li><strong>Descripción</strong>: Son vistas diseñadas específicamente para proporcionar un alto nivel de seguridad y privacidad de datos.</li>
+<li><strong>Implementación</strong>: Creadas con <code>CREATE SECURE VIEW</code>, estas vistas ocultan la lógica de consulta y los datos subyacentes, mostrando solo los resultados de la consulta.</li>
+<li><strong>Aspectos de Seguridad</strong>: Las vistas seguras son ideales para entornos donde la seguridad y la privacidad de los datos son de máxima importancia. Ofrecen una capa adicional de seguridad al ocultar detalles críticos de los datos y la estructura de las bases de datos.</li>
+</ul>
+<h2 id="consideraciones-generales">Consideraciones Generales </h2>
+<ul>
+<li><strong>Elección del Tipo de Vista</strong>: La elección entre vistas regulares, materializadas y seguras depende de los requisitos específicos en términos de rendimiento, actualización de datos y seguridad.</li>
+<li><strong>Implementación y Uso</strong>: La implementación de cada tipo de vista en Snowflake requiere consideraciones específicas sobre cómo y cuándo se actualizan los datos, así como la gestión de los permisos y la seguridad de los datos.</li>
+</ul>
+<h2 id="comparativa-de-tipos-de-vista">Comparativa de Tipos de Vista </h2>
+<table>
+<thead>
+<tr>
+<th>Tipo de Vista</th>
+<th>Descripción</th>
+<th>Almacenamiento de Datos</th>
+<th>Actualización de Datos</th>
+<th>Uso de Seguridad</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Regular View</td>
+<td>Consultas almacenadas que se ejecutan al acceder a la vista.</td>
+<td>No almacena datos físicamente.</td>
+<td>Dinámica, se actualiza con cambios en datos subyacentes.</td>
+<td>Hereda permisos de objetos subyacentes.</td>
+</tr>
+<tr>
+<td>Materialized View</td>
+<td>Almacena físicamente el resultado de la consulta.</td>
+<td>Almacena datos físicamente para un acceso rápido.</td>
+<td>Requiere actualización periódica o automática.</td>
+<td>Implementa controles de seguridad basados en permisos.</td>
+</tr>
+<tr>
+<td>Secure View</td>
+<td>Diseñada para un alto nivel de seguridad y privacidad.</td>
+<td>No almacena datos físicamente.</td>
+<td>Dinámica, se actualiza con cambios en datos subyacentes.</td>
+<td>Oculta la lógica de consulta y los datos subyacentes.</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h1 id="diferencias-entre-un-datalake-y-un-datawarehouse">Diferencias entre un Datalake y un Datawarehouse </h1>
+<p>La diferencia entre un data warehouse y un data lake, especialmente en el contexto de Snowflake, se puede entender mejor al observar el propósito, la estructura y el uso de los datos en cada uno.</p>
+<h2 id="propósito-y-tipo-de-datos">Propósito y Tipo de Datos: </h2>
+<ul>
+<li><strong>Data Warehouse</strong>: Tradicionalmente, un data warehouse en Snowflake se utiliza para almacenar datos estructurados y procesados. Está diseñado para consultas y análisis, y generalmente almacena datos que han sido limpiados, transformados y estructurados. Es ideal para informes empresariales y análisis donde la integridad y la calidad de los datos son críticas.</li>
+<li><strong>Data Lake</strong>: Un data lake, por otro lado, está diseñado para almacenar grandes volúmenes de datos en su forma bruta. Puede manejar datos estructurados, semi-estructurados y no estructurados (como texto, imágenes, logs). Es útil para almacenar datos en su estado original para futuras transformaciones y análisis.</li>
+</ul>
+<h2 id="estructura-y-esquema">Estructura y Esquema: </h2>
+<ul>
+<li><strong>Data Warehouse</strong>: Utiliza un esquema definido previamente (esquema on write), lo que significa que la estructura de los datos se define antes de almacenarlos. Esto facilita las consultas rápidas y eficientes.</li>
+<li><strong>Data Lake</strong>: Emplea un enfoque de esquema on read, lo que significa que los datos se almacenan sin una estructura definida. El esquema se aplica solo cuando se leen los datos para análisis específicos. Esto permite mayor flexibilidad para manejar varios tipos de datos.</li>
+</ul>
+<h2 id="uso-de-los-datos">Uso de los Datos: </h2>
+<ul>
+<li><strong>Data Warehouse</strong>: Ideal para análisis de datos y generación de informes estructurados. Se utiliza para obtener insights basados en datos históricos procesados.</li>
+<li><strong>Data Lake</strong>: Se utiliza para almacenar grandes cantidades de datos en su forma bruta. Es ideal para la exploración de datos, machine learning, y análisis predictivo donde se pueden requerir todos los datos en su forma más granular.</li>
+</ul>
+<h2 id="en-el-contexto-de-snowflake">En el Contexto de Snowflake: </h2>
+<p>Snowflake ofrece capacidades que pueden manejar tanto los requisitos de un data warehouse como los de un data lake. Snowflake tiene la capacidad de almacenar y procesar grandes volúmenes de datos estructurados y semi-estructurados, ofreciendo así una plataforma flexible para diferentes necesidades de datos.</p>
+<p>Además, permite realizar análisis tanto en datos estructurados (como en un data warehouse) como en datos semi-estructurados y no estructurados (como en un data lake).</p>
+<hr>
+<h1 id="warehouse">Warehouse </h1>
+<p>En Snowflake, al crear un "warehouse" (que en este contexto es un término para un clúster de recursos computacionales), la plataforma pide especificar detalles sobre el "hardware", aunque en realidad se refiere más a la configuración de recursos virtuales que se asignarán para procesar las consultas.</p>
+<p>Esto no implica seleccionar hardware físico, ya que Snowflake opera en la nube y maneja la infraestructura subyacente automáticamente.</p>
+<p>Los aspectos clave que debes configurar al crear un warehouse en Snowflake incluyen:</p>
+<ol>
+<li>
+<p><strong>Tamaño del Warehouse</strong>: Esto determina la cantidad de recursos computacionales que se asignarán. Snowflake ofrece diferentes tamaños de warehouses, cada uno con un número creciente de CPU y memoria. Los tamaños van desde "X-Small" hasta "4X-Large" o incluso más grandes en algunos casos. Un tamaño más grande permite un procesamiento más rápido de las consultas pero también consume más créditos de Snowflake, lo que implica un mayor costo.</p>
+</li>
+<li>
+<p><strong>Autoescalamiento</strong>: Puedes configurar el warehouse para que escale automáticamente, añadiendo recursos adicionales cuando sea necesario para manejar cargas de trabajo elevadas y reduciéndolos cuando la demanda disminuye. Esto ayuda a gestionar de manera eficiente los costos mientras se mantiene el rendimiento.</p>
+</li>
+<li>
+<p><strong>Política de Suspensión y Reanudación Automática</strong>: Puedes configurar el warehouse para que se suspenda automáticamente después de un periodo de inactividad, y que se reanude cuando se requiera procesar consultas. Esto ayuda a reducir los costos al evitar el uso innecesario de recursos.</p>
+</li>
+</ol>
+<p>Estas configuraciones permiten a los usuarios de Snowflake ajustar el rendimiento y el costo según las necesidades específicas.</p>
+<p>La flexibilidad y la capacidad de escalar los recursos según sea necesario son algunas de las ventajas clave de Snowflake y de las soluciones de data warehousing en la nube en general.</p>
+
+      </div>
+      
+      
+    
+    
+    
+    
+    
+    
+  
+    </body></html>
