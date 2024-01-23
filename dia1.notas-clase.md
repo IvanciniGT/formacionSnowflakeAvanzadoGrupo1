@@ -434,3 +434,25 @@ DataMining              Análisis más profundo de la información (donde ni siq
 Machine Learning        Predicciones a partir de datos históricos. ---> Data Lake
 
 Warehouse de snowflake  Cluster virtual de máquinas en las que vamos a ejecutar trabajos de análisis, consulta, etc.
+
+---
+
+JAVA: y el uso que hace de la memoria RAM. JAVA hace un uso horrendo de la memoria RAM. (JS/PYTHON)
+
+- String texto = "hola";  // El "hola" se guarda en algún sitio de la memoria RAM
+- texto = "adios";        // El "adios" es lo que ahora se guarda en la memoria RAM...
+                          // Donde? en el mismo sitio donde estaba "hola" o en otro?
+                          //    En otro.. Una variable, al menos en JAVA no es un cajoncito donde pongo cosas... sino que es un puntero a una dirección de memoria (POSTIT)
+
+                          // Llegados a este punto tengo 2 cosas en RAM: "hola" y "adios".
+                          // Cago en la leche.. y si el hola ya no sirve?...
+                          // En JAVA hemos creado el RECOLECTOR DE BASURA... que se encarga de ir limpiando la memoria RAM de cosas que ya no sirven.
+    Esto consideráis que es bueno o malo? Ni bueno ni malo... ES UN FEATURE!
+
+    Cuanto me cuesta hacer un programa A en C++: 300 horas de desarrollador para el programa + 50 horas extra de afinamiento de la memoria (Reservas de memoria, gestionar punteros... liberar memoria -> memory leaks)
+
+    Cuanto me cuesta hacer un programa A en JAVA: 300 horas de desarrollador para el programa + 0 horas de afinamiento de la memoria (Reservas de memoria, gestionar punteros... liberar memoria -> memory leaks)... Eso si... necesito 32 GBS mas de RAM en la máquina.
+
+    Cué cuesta más 32Gbs de RAM o 50 horas de desarrollador? 50 horas de desarrollador...
+
+Análogo a ésto, ocurre en Snowflake
