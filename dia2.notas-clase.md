@@ -121,3 +121,14 @@ NOTA: Cómo se usa eso del clustering key:
 - Similar a lo anterior lo tenemos con los tipos de datos de TEXTO: CHAR, NCHAR, VARCHAR, NVARCHAR..... STRING ... todo la misma mierda...No hay chequeo de nada, todas ocupan lo mismo.
   - Solo existen esos tipos de datos para facilitar la exportación de esquemas de BBDD desde otros motores de BBDD.
   - No obstante se recomienda establecer la longitud máxima... por si acaso otras herramientas que conecten con Snowflake hacen uso de esa información (que será lo más probable)
+
+----
+
+DISK/IO
+- Cúantas particiones leo
+    Tengo datos cargados de 2001, 2002, 2003 y 2004... más o menos los mismo datos por año.
+      25% de los datos si solo quiero el año 2001 GUAY DEL PARAGUAY !!!
+      80% de las particiones RUINA GIGANTE... Tengo la BBDD particionada como el CULO !
+- Cuántas columnas estoy leyendo de los ficheros. Select * ...
+  El optimizador de consultas de Snowflake, al igual que el de cualquier BBDD Relacionacional NO ES GILIPOLLAS... y si ve que solo necesito 2 columnas de 100... solo lee esas 2 columnas... y no las 100.
+- Cuantos más ti@s (nodos) tenga yo leyendo en paralelo (ya que hay muchos ficheritos... más rápido irá la lectura... y mucha más pasta me costará.)
