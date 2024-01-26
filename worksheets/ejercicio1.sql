@@ -219,3 +219,69 @@ ORDER BY
     d_year,
     d_moy, 
     d_dom;
+
+--- Cuantos dias distintos tenemos en la tabla de ventas. Dias en los que hemos vendido
+
+SELECT 
+    COUNT (DISTINCT v.ws_sold_date_sk) as dias_de_venta
+FROM 
+   SNOWFLAKE_SAMPLE_DATA.TPCDS_SF10TCL.WEB_SALES v;
+
+SELECT 
+    APPROX_COUNT_DISTINCT ( v.ws_sold_date_sk) as dias_de_venta
+FROM 
+   SNOWFLAKE_SAMPLE_DATA.TPCDS_SF10TCL.WEB_SALES v;
+
+--- Dame los 10 productos más vendidos (que en más ventas aparecen)
+SELECT 
+    WS_ITEM_SK,
+    count(*)
+FROM 
+   SNOWFLAKE_SAMPLE_DATA.TPCDS_SF10TCL.WEB_SALES v
+GROUP BY WS_ITEM_SK
+ORDER BY count(*) DESC
+LIMIT 10;
+
+SELECT APPROX_TOP_K(WS_ITEM_SK, 10)     
+FROM 
+   SNOWFLAKE_SAMPLE_DATA.TPCDS_SF10TCL.WEB_SALES v;
+
+   -- TODO REVISAR ! No sale coherente
+---
+
+SELECT 
+    WS_ITEM_SK,
+    count_if(ws_net_paid > 1000) AS ventas_mayores_de_1000,
+    count_if(ws_net_paid > 2000) AS ventas_mayores_de_2000,
+    count_if(ws_net_paid > 3000) AS ventas_mayores_de_3000,
+    count_if(ws_net_paid > 4000) AS ventas_mayores_de_4000
+FROM 
+   SNOWFLAKE_SAMPLE_DATA.TPCDS_SF10TCL.WEB_SALES v
+GROUP BY 
+    WS_ITEM_SK;
+
+---
+
+SELECT 
+    WS_ITEM_SK,
+    IFF(ws_net_paid > 4000, 'Importante', 'Pqeueña') as TIPO_VENTA
+FROM 
+   SNOWFLAKE_SAMPLE_DATA.TPCDS_SF10TCL.WEB_SALES v
+LIMIT 100;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -458,16 +458,47 @@ TABLAS DE DIMENSIONES: Son los datos por los que quiero hacer un análisis
 
     Clientes (depende del escenario... potencialmente tabla candidata a su eliminación)
         id
+        nombre     LGPD
+        apellidos
+    SEXO
+        id
+        sexo
+    NUMERO DE HIJOS
+        id
+        numero_de_hijos
         
     Direcciones
         id
         (cliente_id) A tomar por culo!
         calle
         numero
-        codigo_postal
+        --codigo_postal
         ciudad
-        provincia
-        pais
+        provincia_id
+        --pais
+
+    Provincia
+        id
+        nombre
+
+    Pais
+        id
+        nombre
+    
+    CP
+        id
+        codigo_postal
+
+Usaré una herramienta de BI para hacer los informes.
+Listado: ESPAÑA -> id = 35
+El listado ,la herramienta de BI lo carga de la tabla PAISES
+
+Si tengo el país dentro de la tabla direcciones:
+    SELECT * FROM VENTAS 
+                    INNER JOIN DIRECCIONES ON VENTAS.DIRECCION_ID = DIRECCIONES.ID
+             WHERE DIRECCIONES.PAIS = 35... 
+Si tengo el pais fuera:
+    SELECT * FROM VENTAS WHERE VENTAS.PAIS_ID = 35;
 
     Productos
         id
