@@ -8,6 +8,7 @@ USE SCHEMA midb.mies;
 
 -- Me creo la tabla con la estructura adecuada
 CREATE TABLE midb.mies.clientes AS SELECT * FROM SNOWFLAKE_SAMPLE_DATA.TPCDS_SF10TCL.CUSTOMER LIMIT 0;
+-- Aquí creariamos los cluster keys.
 SELECT * FROM midb.mies.clientes;
 
 -- Le enchufo datos
@@ -54,5 +55,167 @@ ALTER SESSION SET use_cached_result = FALSE; -- Se fuerza que no se usen datos d
 
 
 
+---
 
 
+
+-- Me creo la tabla con la estructura adecuada
+CREATE TABLE midb.mies.ventas AS SELECT * FROM SNOWFLAKE_SAMPLE_DATA.TPCDS_SF10TCL.WEB_SALES LIMIT 0;
+-- Aquí creariamos los cluster keys.
+SELECT * FROM midb.mies.ventas;
+-- Le enchufo datos
+INSERT INTO midb.mies.ventas SELECT * FROM SNOWFLAKE_SAMPLE_DATA.TPCDS_SF10TCL.WEB_SALES LIMIT 1000000000;
+SELECT COUNT(*) FROM midb.mies.ventas;
+
+-- Me creo la tabla con la estructura adecuada
+CREATE TABLE midb.mies.fechas AS SELECT * FROM SNOWFLAKE_SAMPLE_DATA.TPCDS_SF10TCL.DATE_DIM LIMIT 0;
+-- Aquí creariamos los cluster keys.
+SELECT * FROM midb.mies.fechas;
+-- Le enchufo datos
+INSERT INTO midb.mies.fechas SELECT * FROM SNOWFLAKE_SAMPLE_DATA.TPCDS_SF10TCL.DATE_DIM;
+SELECT COUNT(*) FROM midb.mies.fechas;
+
+ALTER SESSION SET use_cached_result = FALSE; -- Se fuerza que no se usen datos de la cache.
+SELECT 
+    f.d_moy,
+    count(*) 
+FROM 
+    midb.mies.ventas v
+    INNER JOIN midb.mies.fechas f ON v.ws_sold_date_sk = f.d_date_sk
+WHERE 
+    f.d_year=1999
+GROUP BY 
+    f.d_moy
+ORDER BY 
+    f.d_moy;
+
+
+SELECT 
+    f.d_year,
+    COUNT(*) 
+FROM 
+    midb.mies.ventas v
+    INNER JOIN midb.mies.fechas f ON v.ws_sold_date_sk = f.d_date_sk
+GROUP BY 
+    f.d_year
+ORDER BY 
+    f.d_year;
+
+ALTER TABLE midb.mies.fechas CLUSTER BY (d_date_sk);
+ALTER TABLE midb.mies.ventas CLUSTER BY (ws_sold_date_sk); --ws_sold_date_sk
+
+---
+
+-- Lo que hemos vendido ($) por mes de cada año... y que tal ha sido ese mes, dentro del año
+
+SELECT 
+    f.d_year,
+    f.d_moy,
+    sum(v.ws_net_paid)  as pagado,
+    rank() OVER(PARTITION BY f.d_year ORDER BY pagado ) as puesto
+FROM 
+    midb.mies.ventas v
+    INNER JOIN midb.mies.fechas f ON v.ws_sold_date_sk = f.d_date_sk
+GROUP BY 
+    f.d_year,f.d_moy
+ORDER BY 
+    f.d_year,f.d_moy;
+
+-- Los 3 mejores meses de cada año... y sus ventas
+SELECT 
+    *
+FROM 
+    (SELECT 
+        f.d_year,
+        f.d_moy,
+        sum(v.ws_net_paid)  as pagado,
+        rank() OVER(PARTITION BY f.d_year ORDER BY pagado ) as puesto
+    FROM 
+        midb.mies.ventas v
+        INNER JOIN midb.mies.fechas f ON v.ws_sold_date_sk = f.d_date_sk
+    GROUP BY 
+        f.d_year,f.d_moy
+    )
+WHERE 
+    puesto < 4
+ORDER BY 
+    d_year,puesto
+    ;
+
+
+SELECT 
+    f.d_year,
+    f.d_moy,
+    sum(v.ws_net_paid)  as pagado,
+    rank() OVER(PARTITION BY f.d_year ORDER BY pagado DESC ) as puesto
+FROM 
+    midb.mies.ventas v
+    INNER JOIN midb.mies.fechas f ON v.ws_sold_date_sk = f.d_date_sk
+GROUP BY 
+    f.d_year,f.d_moy
+QUALIFY puesto < 4
+ORDER BY 
+    f.d_year, puesto;
+
+---
+-- Saber los meses que han incrementado las ventas con respecto al mes anterior en más de un 50%
+
+WITH ventas_por_meses AS (
+    SELECT 
+        f.d_year,
+        f.d_moy,
+        sum(v.ws_net_paid)  as importe
+    FROM 
+        midb.mies.ventas v
+        INNER JOIN midb.mies.fechas f ON v.ws_sold_date_sk = f.d_date_sk
+    GROUP BY 
+        f.d_year,f.d_moy
+)
+SELECT 
+    d_year,
+    d_moy,
+    importe,
+    LAG(importe, 1) OVER (ORDER BY d_year, d_moy) as importe_anterior
+FROM ventas_por_meses
+QUALIFY importe / importe_anterior > 2;
+
+
+-- Ventas por dia en el año 2001
+USE SCHEMA SNOWFLAKE_SAMPLE_DATA.TPCDS_SF10TCL;
+
+WITH importes_dia_2000 AS (
+    SELECT 
+        f.d_year,
+        f.d_moy, 
+        f.d_dom,
+        sum(v.ws_net_paid) as importe_total_dia
+    FROM 
+        SNOWFLAKE_SAMPLE_DATA.TPCDS_SF10TCL.WEB_SALES v
+        INNER JOIN SNOWFLAKE_SAMPLE_DATA.TPCDS_SF10TCL.DATE_DIM f ON v.ws_sold_date_sk = f.d_date_sk
+    WHERE 
+        f.d_year = 2000
+    GROUP BY 
+        f.d_year,f.d_moy, f.d_dom
+)
+SELECT 
+        d_year,
+        d_moy, 
+        d_dom,
+        importe_total_dia,
+        sum(importe_total_dia) over() as importe_total_anual,
+        SUM(importe_total_dia) over ( 
+            order by d_year, d_moy, d_dom 
+            ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+        ) as acumulado_anual,
+        avg(importe_total_dia) over ( 
+            order by d_year, d_moy, d_dom 
+            ROWS BETWEEN 6 PRECEDING AND CURRENT ROW
+        ) as media_7_dias,
+        rank() over (order by importe_total_dia desc) as puesto_anual,
+        rank() over (partition by d_moy order by importe_total_dia desc) as puesto_mensual
+FROM 
+    importes_dia_2000
+ORDER BY 
+    d_year,
+    d_moy, 
+    d_dom;
