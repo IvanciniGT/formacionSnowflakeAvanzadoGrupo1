@@ -445,3 +445,147 @@ FROM
     LATERAL FLATTEN (split(colores, ',')) as colores_separados;
 
 -- TODAS LAS FUNCIONES SNOWFLAKE: https://docs.snowflake.com/sql-reference/functions
+
+
+
+SELECT
+    DATEADD(MONTH, -1, CURRENT_DATE()) as MES_ANTERIOR,
+    MONTH(MES_ANTERIOR), YEAR(MES_ANTERIOR);
+
+
+
+CREATE OR REPLACE PROCEDURE extraer_datos_mes_anterior()
+RETURNS DOUBLE
+LANGUAGE JAVASCRIPT
+AS
+$$
+    // Paso 1: Calcular mes y año del mes del mes anterior
+    var queryCalculoMesAnterior = "SELECT DATEADD(MONTH, -1, CURRENT_DATE()) as MES_ANTERIOR, MONTH(MES_ANTERIOR), YEAR(MES_ANTERIOR)";
+    var datosMesAnterior = snowflake.execute({sqlText: queryCalculoMesAnterior});
+    datosMesAnterior.next();
+    var mes = datosMesAnterior.getColumnValue(2);
+    var anio = datosMesAnterior.getColumnValue(3);
+
+    // Paso 2: Preparar la tabla receptora de los datos del mes anterior
+    var queryExistenciaTablaNueva = "SHOW TABLES LIKE 'ventas_" + anio + "_" + mes + "'";
+    var resultadoTablaNueva = snowflake.execute({sqlText: queryExistenciaTablaNueva});
+    var existeLaTabla = resultadoTablaNueva.next();
+
+    // En función de si la tabla existe ya o no, hago unas u otras tareas.
+    var queryPreparacionNuevaTabla = "CREATE TABLE ventas_" + anio + "_" + mes + " AS SELECT * FROM ventas LIMIT 0";
+    if(existeLaTabla){
+        queryPreparacionNuevaTabla = "TRUNCATE TABLE ventas_" + anio + "_" + mes;
+    }
+    snowflake.execute({sqlText: queryPreparacionNuevaTabla});
+
+    // Paso 3. Copiado de los datos del mes anterior a la nueva tabla
+    var queryCopiadoDatos = "INSERT INTO ventas_" + anio + "_" + mes + " SELECT v.* FROM ventas v, fechas f WHERE v.ws_sold_date_sk = f.d_date_sk AND f.d_moy = " + mes + " AND f.d_year = " + anio;
+    snowflake.execute({sqlText: queryCopiadoDatos});
+
+    // Paso 4. Creación de la vista
+    var queryCreacionVista = "CREATE OR REPLACE VIEW ventas_mes_anterior AS SELECT * FROM ventas_" + anio + "_" + mes;
+    snowflake.execute({sqlText: queryCreacionVista});
+
+    // Paso 5: Calculo de nuevos datos insertados y prueba de la vista
+    var queryPruebaVista = "SELECT COUNT(*) FROM ventas_mes_anterior";
+    var resultadoPruebaVista = snowflake.execute({sqlText: queryPruebaVista});
+    resultadoPruebaVista.next();
+    var numeroFilas = resultadoPruebaVista.getColumnValue(1);
+
+    return numeroFilas;
+$$;
+
+CALL extraer_datos_mes_anterior();
+
+SHOW TABLES LIKE 'ventas_2023_12';
+
+
+SELECT 'ventas_' || CAST(2002 AS STRING) || '_' || LPAD(CAST(9 AS STRING),2,'0');
+
+
+
+
+
+
+---
+
+
+CREATE OR REPLACE PROCEDURE extraer_datos_mes(anio DOUBLE, mes DOUBLE)
+RETURNS DOUBLE
+LANGUAGE JAVASCRIPT
+AS
+$$
+    // Paso 0: Me genero el nombre de la tabla con JS
+    var nombreTabla = "ventas_" + ANIO + "_" + ('0' + MES).substr(-2);
+    
+    // Paso 0 .... opcion SQL
+    var queryNombreTabla = "SELECT 'ventas_' || CAST(:1 AS STRING) || '_' || LPAD(CAST(:2 AS STRING),2,'0')";
+    var resultadoNombreTabla = snowflake.execute({sqlText: queryNombreTabla, binds: [ANIO, MES]});
+    resultadoNombreTabla.next();
+    var nombreTabla = resultadoNombreTabla.getColumnValue(1);
+
+    // Paso 1: Preparar la tabla receptora de los datos del mes anterior
+    var queryExistenciaTablaNueva = "SHOW TABLES LIKE '"+nombreTabla+ "'";
+    var resultadoTablaNueva = snowflake.execute({sqlText: queryExistenciaTablaNueva});
+    var existeLaTabla = resultadoTablaNueva.next();
+
+    // En función de si la tabla existe ya o no, hago unas u otras tareas.
+    var queryPreparacionNuevaTabla = "CREATE TABLE "+nombreTabla+" AS SELECT * FROM ventas LIMIT 0";
+    if(existeLaTabla){
+        queryPreparacionNuevaTabla = "TRUNCATE TABLE "+nombreTabla;
+    }
+    snowflake.execute({sqlText: queryPreparacionNuevaTabla});
+
+    // Paso 2. Copiado de los datos del mes anterior a la nueva tabla
+    var queryCopiadoDatos = "INSERT INTO " + nombreTabla + " SELECT v.* FROM ventas v, fechas f WHERE v.ws_sold_date_sk = f.d_date_sk AND f.d_moy = :1 AND f.d_year = :2";
+    snowflake.execute({sqlText: queryCopiadoDatos, binds: [MES, ANIO]});
+
+    // Paso 3. Creación de la vista
+    var queryCreacionVista = "CREATE OR REPLACE VIEW ventas_mes_anterior AS SELECT * FROM " + nombreTabla;
+    snowflake.execute({sqlText: queryCreacionVista});
+
+    // Paso 4: Calculo de nuevos datos insertados y prueba de la vista
+    var queryPruebaVista = "SELECT COUNT(*) FROM ventas_mes_anterior";
+    var resultadoPruebaVista = snowflake.execute({sqlText: queryPruebaVista});
+    resultadoPruebaVista.next();
+    var numeroFilas = resultadoPruebaVista.getColumnValue(1);
+
+    return numeroFilas;
+$$
+;
+
+
+CREATE OR REPLACE PROCEDURE extraer_datos_mes_anterior()
+RETURNS DOUBLE
+LANGUAGE JAVASCRIPT
+AS
+$$
+    // Paso 1: Calcular mes y año del mes del mes anterior
+    var queryCalculoMesAnterior = "SELECT DATEADD(MONTH, -1, CURRENT_DATE()) as MES_ANTERIOR, MONTH(MES_ANTERIOR), YEAR(MES_ANTERIOR)";
+    var datosMesAnterior = snowflake.execute({sqlText: queryCalculoMesAnterior});
+    datosMesAnterior.next();
+    var mes = datosMesAnterior.getColumnValue(2);
+    var anio = datosMesAnterior.getColumnValue(3);
+
+    // Paso 2, llamo al procedimiento extraer_datos_mes y devuelvo el resultado
+    var queryInvocacionOtroProcedimiento = "CALL extraer_datos_mes(:1, :2)";
+    var resultadoInvocacionOtroProcedimiento = snowflake.execute({sqlText: queryInvocacionOtroProcedimiento, binds: [anio, mes]});
+    resultadoInvocacionOtroProcedimiento.next();
+    var numeroFilas = resultadoInvocacionOtroProcedimiento.getColumnValue(1);
+    return numeroFilas;
+$$
+;
+
+call extraer_datos_mes(2000, 2);
+
+SELECT count(*) FROM ventas_2000_02;
+
+SELECT count(*) FROM ventas_mes_anterior;
+
+call extraer_datos_mes_anterior();
+
+SELECT count(*) FROM ventas_2023_12;
+
+SELECT count(*) FROM ventas_mes_anterior;
+
+
