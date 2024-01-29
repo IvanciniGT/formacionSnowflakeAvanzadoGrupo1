@@ -602,12 +602,12 @@ AS
 $$
     // Paso -1: Comprobación de parámetros
     // Me aseguro que el año tenga 4 dígitos... y sea positivo
-    if(anio < 1000 || anio > 9999){
+    if(ANIO < 1000 || ANIO > 9999){
         snowflake.log("error", "El año debe ser válido");
         throw "El año debe tener 4 dígitos"; // Lanza una exception y corta la ejecución del Procedure, mostrando al que ha llamado al procedure ese mensaje de error.
     }
     // Me aseguro que el mes sea un número entre 1 y 12
-    if(mes < 1 || mes > 12){
+    if(MES < 1 || MES > 12){
         snowflake.log("error", "El mes debe ser válido");
         throw "El mes debe ser un número entre 1 y 12"; // Lanza una exception y corta la ejecución del Procedure, mostrando al que ha llamado al procedure ese mensaje de error.
     }
