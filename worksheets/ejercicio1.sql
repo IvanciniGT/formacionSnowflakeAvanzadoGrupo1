@@ -3,6 +3,7 @@ USE WAREHOUSE compute_wh;
 
 -- Creando base de datos y esquema
 CREATE DATABASE IF NOT EXISTS midb;
+USE DATABASE midb;
 CREATE SCHEMA IF NOT EXISTS mies;
 USE SCHEMA midb.mies;
 
@@ -232,21 +233,6 @@ SELECT
 FROM 
    SNOWFLAKE_SAMPLE_DATA.TPCDS_SF10TCL.WEB_SALES v;
 
---- Dame los 10 productos más vendidos (que en más ventas aparecen)
-SELECT 
-    WS_ITEM_SK,
-    count(*)
-FROM 
-   SNOWFLAKE_SAMPLE_DATA.TPCDS_SF10TCL.WEB_SALES v
-GROUP BY WS_ITEM_SK
-ORDER BY count(*) DESC
-LIMIT 10;
-
-SELECT APPROX_TOP_K(WS_ITEM_SK, 10)     
-FROM 
-   SNOWFLAKE_SAMPLE_DATA.TPCDS_SF10TCL.WEB_SALES v;
-
-   -- TODO REVISAR ! No sale coherente
 ---
 
 SELECT 
@@ -269,19 +255,193 @@ FROM
    SNOWFLAKE_SAMPLE_DATA.TPCDS_SF10TCL.WEB_SALES v
 LIMIT 100;
 
+---
 
+--- Dame las 10 formas de envío más solicitadas
+SELECT 
+    WS_SHIP_MODE_SK,
+    count(*) as recuento
+FROM 
+   SNOWFLAKE_SAMPLE_DATA.TPCDS_SF10TCL.WEB_SALES v
+GROUP BY WS_SHIP_MODE_SK
+ORDER BY recuento DESC
+LIMIT 10;
+---
+SELECT APPROX_TOP_K(WS_SHIP_MODE_SK, 10)     
+FROM 
+   SNOWFLAKE_SAMPLE_DATA.TPCDS_SF10TCL.WEB_SALES v;
+---
 
+WITH top_tipos_envio AS (
+    SELECT APPROX_TOP_K(WS_SHIP_MODE_SK, 10) as lista_tipos_envio     
+    FROM 
+       SNOWFLAKE_SAMPLE_DATA.TPCDS_SF10TCL.WEB_SALES
+)
+SELECT 
+    --*
+    value[0]::INT as tipo_envio,
+    value[1]::INT as numero_ventas_estimado
+FROM
+    top_tipos_envio, 
+    LATERAL FLATTEN(top_tipos_envio.lista_tipos_envio);
 
+----
+-- El precio maximo pagado en el 95% de las ventas
+SELECT 
+    APPROX_PERCENTILE(ws_net_paid, 0.95)
+FROM 
+   SNOWFLAKE_SAMPLE_DATA.TPCDS_SF10TCL.WEB_SALES; -- 8625
 
+SELECT 
+    MAX(ws_net_paid)
+FROM 
+   SNOWFLAKE_SAMPLE_DATA.TPCDS_SF10TCL.WEB_SALES;
 
+---
+-- Saber las ventas con importe menor a 8625... y las ventas totales... y dividirlos
+-- Todo en una query
+SELECT 
+    COUNT_IF(ws_net_paid < 8625.25) as menores,
+    COUNT(*) as totales,
+    menores/totales as percentil95
+FROM 
+   SNOWFLAKE_SAMPLE_DATA.TPCDS_SF10TCL.WEB_SALES;
 
+---
+SELECT 
+    MAX_BY(ws_item_sk, ws_net_paid, 3) -- MIN_BY
+FROM 
+   SNOWFLAKE_SAMPLE_DATA.TPCDS_SF10TCL.WEB_SALES;
+---
+SELECT 
+    ws_item_sk, ws_net_paid
+FROM 
+   SNOWFLAKE_SAMPLE_DATA.TPCDS_SF10TCL.WEB_SALES
+WHERE ws_net_paid is not null
+ORDER BY
+    ws_net_paid DESC
+LIMIT 3;
+---
+SELECT ws_item_sk, max(ws_net_paid) as pagado
+FROM 
+SNOWFLAKE_SAMPLE_DATA.TPCDS_SF10TCL.WEB_SALES
+WHERE 
+ws_item_sk IN (166339,
+  348584,
+  194707,
+  236224,
+  35860,
+  355482)
+GROUP BY ws_item_sk;
 
+---
 
+SELECT 
+    *
+FROM (values 
+    (1,2),
+    (1, null),
+    (null, 2),
+    (null, null)
+);
+---
+SELECT 
+    column1, column2, coalesce(column1, column2) as primer_no_nulo
+FROM (values 
+    (1,2),
+    (1, null),
+    (null, 2),
+    (null, null)
+);
+---
+SELECT 
+    column1, decode(column1,
+        1, 'UNO',
+        2, 'DOS',
+        null, 'NULO',
+        'OTRO'
+    ) as resultado
+FROM (values 
+    (1),
+    (2),
+    (3),
+    (null)
+);
+---
+SELECT 
+    column1, ifnull(column1, 0) as resultado
+FROM (values 
+    (1),
+    (2),
+    (3),
+    (null)
+);
 
+---
+-- FECHAS
 
+-- FECHA DE HOY
+ALTER SESSION SET TIMEZONE = 'Europe/Madrid';
 
+SELECT
+    SYSDATE(),
+    CURRENT_TIMESTAMP();
+-- SYSDATE que nos ofrece un TIMESTAMP... a pesar del nombre
+-- DIFIEREN en la zona horaria
+-- SYSDATE trabaja en UTC (ZONA 0)
+-- CURRENT_TIMESTAMP trabaja en la zona definida en la sesion del usuario con la que conectamos.
 
+ALTER SESSION SET TIMEZONE = 'Europe/Lisbon';
+SELECT
+    SYSDATE(),
+    CURRENT_TIMESTAMP(),
+    CURRENT_DATE,
+    CURRENT_TIME,
+    LOCALTIME,
+    LOCALTIMESTAMP;
 
+ALTER SESSION SET TIMESTAMP_NTZ_OUTPUT_FORMAT = 'YYYY-MM-DD HH24:MI';
+ALTER SESSION SET TIMESTAMP_LTZ_OUTPUT_FORMAT = 'YYYY-MM-DD HH24:MI';
 
+SELECT
+    SYSDATE(),
+    CURRENT_TIMESTAMP,
+    LOCALTIME;
+-- Todas esas son funciones... como no tienen argumentos, las puedo invocar con o sin parentesis.
 
+SELECT TO_DATE('15/29/2024', 'MM/DD/YYYY'), TO_DATE('29/01/2024', 'DD/MM/YYYY');
+SELECT TRY_TO_DATE('15/29/2024', 'MM/DD/YYYY'), TO_DATE('29/01/2024', 'DD/MM/YYYY');
+SELECT TRY_CAST('8273' AS INT);
+SELECT TRY_TO_DECIMAL('8273.98');
 
+---
+WITH frutas AS (
+    SELECT 
+        column1 as fruta, 
+        column2 as colores 
+    FROM values 
+        ('manzana', 'roja,verde,amarilla'),
+        ('ciruela', 'morada,verde,amarilla')
+)
+SELECT 
+    fruta,
+    split(colores, ',') as colores
+FROM frutas;
+---
+WITH frutas AS (
+    SELECT 
+        column1 as fruta, 
+        column2 as colores 
+    FROM values 
+        ('manzana', 'roja,verde,amarilla'),
+        ('ciruela', 'morada,verde,amarilla')
+)
+SELECT 
+    --*
+    fruta,
+    value::string as Color
+FROM 
+    frutas,
+    LATERAL FLATTEN (split(colores, ',')) as colores_separados;
+
+-- TODAS LAS FUNCIONES SNOWFLAKE: https://docs.snowflake.com/sql-reference/functions
