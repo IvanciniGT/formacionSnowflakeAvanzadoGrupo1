@@ -873,3 +873,44 @@ $$
 CALL matar_tareas_lentas(1);
 
 SELECT system$cancel_query('01b20920-0203-56b5-0001-ffc6000353fe');
+
+
+
+CREATE OR REPLACE FUNCTION procesar_dni(DNI STRING)
+RETURNS VARIANT
+LANGUAGE JAVASCRIPT
+AS
+$$
+    var resultado = {
+                        dni: DNI.toUpperCase(), 
+                        valido: true, 
+                        numero: null,
+                        letra: null
+                    };
+    
+    // Validar la estructura del DNI entrante con una expresion regular
+    var expresionRegular = /^[0-9]{1,8}[A-Z]$/;
+    if(expresionRegular.test(resultado.dni)){
+        resultado.numero = parseInt(resultado.dni.substr(0, resultado.dni.length-1),10);
+        resultado.letra  = resultado.dni.substr(-1);
+        // Validar la letra
+        var letrasValidas = 'TRWAGMYFPDXBNJZSQVHLCKE';
+        var restoDivision = resultado.numero % 23;
+        var letraQueDeberiaTener = letrasValidas.substr(restoDivision, 1);
+        if(letraQueDeberiaTener != resultado.letra){
+            resultado.valido = false;
+        }
+    } else {
+        resultado.valido = false;
+    }
+
+    return resultado;
+$$;
+
+
+
+22 | 23
+   --------
+ 22    0
+ ^
+ Ese dato va a estar entre: 0-22
