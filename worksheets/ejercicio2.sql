@@ -163,14 +163,14 @@ CREATE OR REPLACE TABLE personas_validas (
 -- (insertando los nuevos QUE SEAN VALIDOS, actualizando los que han cambiado (O BORRANDO o INSERTANDO) , y eliminando los que ya no existen)
 
 CREATE OR REPLACE PROCEDURE sincronizar_personas()
-RETURN VARIANT
+RETURNS VARIANT
 LANGUAGE JAVASCRIPT
 EXECUTE AS CALLER
 AS
 $$
     var aDevolver = {
-                        validos: 0;
-                        invalidos: 0;
+                        validos: 0,
+                        invalidos: 0
                     };
     
     // Tengo que leer todos los cambios del stream: cambios_en_personas
@@ -180,6 +180,9 @@ $$
                                                             METADATA$ACTION as accion,
                                                             METADATA$ISUPDATE as actualizado
                                                     FROM cambios_en_personas`});
+    
+    // Abrimos transacción
+    snowflake.execute({sqlText: `BEGIN`});
     while(cambios.next()){
         var id = cambios.getColumnValue(1);
         var nombre = cambios.getColumnValue(2);
@@ -200,7 +203,7 @@ $$
                 // intento eliminar de personas_validas
             }
             // Es válido: inserto en personas_validas
-            if(procesado['valido']){
+            if(dni['valido']){
                 snowflake.execute({sqlText: `INSERT INTO personas_validas (id, nombre, numero_dni, letra_dni) VALUES (?,?,?,?)`, 
                 binds: [id, nombre, dni['numero'], dni['letra']]});
                 aDevolver.validos++;
@@ -209,6 +212,7 @@ $$
             }
         }
     }
+    snowflake.execute({sqlText: `COMMIT`});
     return aDevolver;
 $$;
 
@@ -220,3 +224,9 @@ CREATE OR REPLACE TASK tarea_sincronizar_personas
         CALL sincronizar_personas();
 
 ALTER TASK tarea_sincronizar_personas RESUME; -- Pon la tarea a funcionar
+
+
+--- Un tipo especial de stream son los strems APPEND_ONLY... solo registran INSERTS NUEVOS... y son más ligeros
+CREATE OR REPLACE STREAM mi_stream ON TABLE mi_tabla append_only=true;
+
+
