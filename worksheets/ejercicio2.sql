@@ -13,6 +13,14 @@ RETURNS VARIANT
 LANGUAGE JAVASCRIPT
 AS
 $$
+    if(!DNI || DNI === null){
+        return {
+                    dni: null, 
+                    valido: false, 
+                    numero: null,
+                    letra: null
+                };
+    }
     var resultado = {
                         dni: DNI.toUpperCase(), 
                         valido: true, 
@@ -166,14 +174,41 @@ $$
                     };
     
     // Tengo que leer todos los cambios del stream: cambios_en_personas
-    // Depende del tipo de cambio... así hago
-    // DELETE QUE NO ES PARTE DE UN UPDATE... intento borrar por si existe personas_validas
-    // DELETE QUE SI ES PARTE DE UN UPDATE... nada
-    // INSERT 
-        // SI QUE ES PARTE DE UN UPDATE... 
-            // intento eliminar de personas_validas
-        // Es válido: inserto en personas_validas
-    
+    var cambios = snowflake.execute({sqlText: `SELECT       id, 
+                                                            nombre, 
+                                                            procesar_dni(dni) as procesado, 
+                                                            METADATA$ACTION as accion,
+                                                            METADATA$ISUPDATE as actualizado
+                                                    FROM cambios_en_personas`});
+    while(cambios.next()){
+        var id = cambios.getColumnValue(1);
+        var nombre = cambios.getColumnValue(2);
+        var dni = cambios.getColumnValue(3);
+        var accion = cambios.getColumnValue(4);
+        var actualizado = cambios.getColumnValue(5);
+        // Depende del tipo de cambio... así hago
+        // DELETE QUE NO ES PARTE DE UN UPDATE... intento borrar por si existe personas_validas
+        if(accion === 'DELETE' && !actualizado){
+            snowflake.execute({sqlText: `DELETE FROM personas_validas WHERE id = ?`, binds: [id]});
+        }
+        // DELETE QUE SI ES PARTE DE UN UPDATE... nada
+        // INSERT 
+        else if(accion === 'INSERT'){
+            // SI QUE ES PARTE DE UN UPDATE... 
+            if(actualizado){
+                snowflake.execute({sqlText: `DELETE FROM personas_validas WHERE id = ?`, binds: [id]});
+                // intento eliminar de personas_validas
+            }
+            // Es válido: inserto en personas_validas
+            if(procesado['valido']){
+                snowflake.execute({sqlText: `INSERT INTO personas_validas (id, nombre, numero_dni, letra_dni) VALUES (?,?,?,?)`, 
+                binds: [id, nombre, dni['numero'], dni['letra']]});
+                aDevolver.validos++;
+            } else {
+                aDevolver.invalidos++;
+            }
+        }
+    }
     return aDevolver;
 $$;
 
