@@ -165,6 +165,14 @@ $$
                         invalidos: 0;
                     };
     
+    // Tengo que leer todos los cambios del stream: cambios_en_personas
+    // Depende del tipo de cambio... así hago
+    // DELETE QUE NO ES PARTE DE UN UPDATE... intento borrar por si existe personas_validas
+    // DELETE QUE SI ES PARTE DE UN UPDATE... nada
+    // INSERT 
+        // SI QUE ES PARTE DE UN UPDATE... 
+            // intento eliminar de personas_validas
+        // Es válido: inserto en personas_validas
     
     return aDevolver;
 $$;
