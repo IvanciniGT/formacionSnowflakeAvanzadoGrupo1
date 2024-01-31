@@ -153,3 +153,27 @@ CREATE OR REPLACE TABLE personas_validas (
 -- Una tarea que se ejecute cada 5 minutos, que lea los cambios en la tabla personas, 
 -- y sincronice adecuadamente con la tabla personas_validas
 -- (insertando los nuevos QUE SEAN VALIDOS, actualizando los que han cambiado (O BORRANDO o INSERTANDO) , y eliminando los que ya no existen)
+
+CREATE OR REPLACE PROCEDURE sincronizar_personas()
+RETURN VARIANT
+LANGUAGE JAVASCRIPT
+EXECUTE AS CALLER
+AS
+$$
+    var aDevolver = {
+                        validos: 0;
+                        invalidos: 0;
+                    };
+    
+    
+    return aDevolver;
+$$;
+
+
+CREATE OR REPLACE TASK tarea_sincronizar_personas
+    WAREHOUSE = compute_wh
+    SCHEDULE = 'USING CRON 5 * * * * UTC'
+    AS
+        CALL sincronizar_personas();
+
+ALTER TASK tarea_sincronizar_personas RESUME; -- Pon la tarea a funcionar
