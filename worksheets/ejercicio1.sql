@@ -588,11 +588,70 @@ SELECT count(*) FROM ventas_2023_12;
 
 SELECT count(*) FROM ventas_mes_anterior;
 
---
 
 CREATE EVENT TABLE IF NOT EXISTS midb.mies.eventos;
 ALTER ACCOUNT SET EVENT_TABLE = midb.mies.eventos;
 SHOW PARAMETERS LIKE 'EVENT_TABLE' IN ACCOUNT;
+
+
+
+CREATE OR REPLACE PROCEDURE extraer_datos_mes(anio DOUBLE, mes DOUBLE)
+RETURNS DOUBLE
+LANGUAGE JAVASCRIPT
+AS
+$$
+    // Paso 0: Me genero el nombre de la tabla con JS
+    var nombreTabla = "ventas_" + ANIO + "_" + ('0' + MES).substr(-2);
+    
+    // Paso 0 .... opcion SQL
+    var queryNombreTabla = "SELECT 'ventas_' || CAST(:1 AS STRING) || '_' || LPAD(CAST(:2 AS STRING),2,'0')";
+    var resultadoNombreTabla = snowflake.execute({sqlText: queryNombreTabla, binds: [ANIO, MES]});
+    resultadoNombreTabla.next();
+    var nombreTabla = resultadoNombreTabla.getColumnValue(1);
+
+    snowflake.log("debug", "Se procede a la creación/preparación de la tabla: '"+nombreTabla+"'");
+
+    // Paso 1: Preparar la tabla receptora de los datos del mes anterior
+    var queryExistenciaTablaNueva = "SHOW TABLES LIKE '"+nombreTabla+ "'";
+    var resultadoTablaNueva = snowflake.execute({sqlText: queryExistenciaTablaNueva});
+    var existeLaTabla = resultadoTablaNueva.next();
+
+    // En función de si la tabla existe ya o no, hago unas u otras tareas.
+    var queryPreparacionNuevaTabla = "CREATE TABLE "+nombreTabla+" AS SELECT * FROM ventas LIMIT 0";
+    if(existeLaTabla){
+        queryPreparacionNuevaTabla = "TRUNCATE TABLE "+nombreTabla;
+    }
+    snowflake.execute({sqlText: queryPreparacionNuevaTabla});
+    snowflake.log("debug", "Se ha creado/preparado la tabla: '"+nombreTabla+"' correctamente");
+
+
+    // Paso 2. Copiado de los datos del mes anterior a la nueva tabla
+    var queryCopiadoDatos = "INSERT INTO " + nombreTabla + " SELECT v.* FROM ventas v, fechas f WHERE v.ws_sold_date_sk = f.d_date_sk AND f.d_moy = :1 AND f.d_year = :2";
+    snowflake.execute({sqlText: queryCopiadoDatos, binds: [MES, ANIO]});
+    snowflake.log("debug", "Se han copiado los datos a la tabla: '"+nombreTabla+"' correctamente");
+
+    // Paso 3. Creación de la vista
+    var queryCreacionVista = "CREATE OR REPLACE VIEW ventas_mes_anterior AS SELECT * FROM " + nombreTabla;
+    snowflake.execute({sqlText: queryCreacionVista});
+    snowflake.log("debug", "Se ha actualizado la referencia de la vista 'ventas_mes_anterior' a la nueva tabla: '"+nombreTabla+"'");
+
+    // Paso 4: Calculo de nuevos datos insertados y prueba de la vista
+    var queryPruebaVista = "SELECT COUNT(*) FROM ventas_mes_anterior";
+    var resultadoPruebaVista = snowflake.execute({sqlText: queryPruebaVista});
+    resultadoPruebaVista.next();
+    var numeroFilas = resultadoPruebaVista.getColumnValue(1);
+
+    snowflake.log("info", "Se han insertado "+numeroFilas+" filas en la tabla '"+nombreTabla+"' y se ha actualizado la referencia de la vista 'ventas_mes_anterior'");
+
+    return numeroFilas;
+$$
+;
+call extraer_datos_mes(2001,1);
+
+
+
+---
+
 
 
 CREATE OR REPLACE PROCEDURE extraer_datos_mes(anio DOUBLE, mes DOUBLE)
@@ -673,7 +732,7 @@ $$
     var anio = datosMesAnterior.getColumnValue(3);
 
     // Paso 2, llamo al procedimiento extraer_datos_mes y devuelvo el resultado
-    var queryInvocacionOtroProcedimiento = "CALL extraer_datos_mes(:1, :2)";
+    var queryInvocacionOtroProcedimiento = "CALL extraer_datos_mes(?,?)";
     var resultadoInvocacionOtroProcedimiento = snowflake.execute({sqlText: queryInvocacionOtroProcedimiento, binds: [anio, mes]});
     resultadoInvocacionOtroProcedimiento.next();
     var numeroFilas = resultadoInvocacionOtroProcedimiento.getColumnValue(1);
@@ -681,7 +740,8 @@ $$
 $$
 ;
 
-call extraer_datos_mes(2000, 2);
+call extraer_datos_mes(2000, 3);
+call extraer_datos_mes(2000, 22);
 
 SELECT count(*) FROM ventas_2000_02;
 
@@ -693,4 +753,123 @@ SELECT count(*) FROM ventas_2023_12;
 
 SELECT count(*) FROM ventas_mes_anterior;
 
-```
+
+
+--- Para poder usar logs... y que se registren, es necesario tener una tabla de logs
+CREATE OR REPLACE EVENT TABLE midb.mies.eventos;
+ALTER ACCOUNT SET EVENT_TABLE = midb.mies.eventos;
+SHOW PARAMETERS LIKE 'EVENT_TABLE' IN ACCOUNT;
+-- Configurar el nivel de mensages que se registran en la tabla de eventos.
+ALTER DATABASE midb SET LOG_LEVEL = INFO; -- Esto hará que se guarden solo: INFO, ERROR, FATAL, pero no los DEBUG
+-- DEBUG < INFO < ERROR < FATAL
+ALTER PROCEDURE extraer_datos_mes(DOUBLE, DOUBLE) SET LOG_LEVEL = DEBUG; -- Esto hará que se guarden: DEBUG, INFO, ERROR, FATAL, pero solo los producidos desde ese procedimiento.. Los producidos desde otros procedimientos se atienen a  las reglas definidas en la BBDD
+
+call extraer_datos_mes(2000, 4);
+SELECT * FROM midb.mies.eventos;
+
+SELECT 
+    TIMESTAMP as FECHA,
+    RESOURCE_ATTRIBUTES['snow.executable.name']::String AS procedimiento,
+    RECORD['severity_text']::String as nivel_log,
+    VALUE::String as mensaje
+FROM midb.mies.eventos
+ORDER BY TIMESTAMP DESC
+LIMIT 50;
+
+-- Qué pasa ahora si quiero que este procedimiento se ejecute todos los meses... el día 1... en AUTOMATICO
+-- Para esto, configuramos un TASK... una TAREA !
+
+CREATE OR REPLACE TASK generar_informe_mensual
+    WAREHOUSE = compute_wh
+    SCHEDULE = 'USING CRON * * * * * UTC'
+          --'USING CRON 0 0 1 * * Europe/Madrid'
+                    --- 1 2 3 4 5
+                    -- 1: MINUTO
+                    -- 2: HOUR
+                    -- 3: DIA
+                    -- 4: MES
+                    -- 5: DIA DE LA SEMANA
+                    -- * EN TODOS
+    -- SCHEDULE = '1 minute' '3 day' '1 month'
+    AS
+        CALL extraer_datos_mes_anterior();
+
+ALTER TASK generar_informe_mensual RESUME; -- Pon la tarea a funcionar
+
+SHOW TASKS ;
+
+ALTER TASK generar_informe_mensual SUSPEND; -- Pon la tarea en pausa... No se sigue ejecutando
+
+SELECT * FROM TABLE(INFORMATION_SCHEMA.TASK_HISTORY());
+
+-- STATE: SCHEDULED, SUCCEEDED, RUNNING
+
+SELECT 
+    QUERY_ID 
+FROM 
+    TABLE(INFORMATION_SCHEMA.TASK_HISTORY())
+WHERE 
+--    DATEADD(MINUTE, 5, QUERY_START_TIME) < CURRENT_TIMESTAMP())
+--    DATEDIFF(MINUTE, CURRENT_TIMESTAMP(), QUERY_START_TIME) > 5
+    DATEADD(MINUTE, -5, CURRENT_TIMESTAMP()) > QUERY_START_TIME
+    AND STATE = 'RUNNING'
+;
+
+--- PROCEDIMIENTO: MATAR tareas que estén tardando mucho.
+
+
+
+SELECT 
+    QUERY_ID, NAME
+FROM 
+    TABLE(INFORMATION_SCHEMA.TASK_HISTORY()),
+    (SELECT DATEADD(MINUTE, -5,CURRENT_TIMESTAMP()) as limite) tiempo
+WHERE 
+     QUERY_START_TIME < tiempo.limite
+     AND STATE = 'RUNNING'
+;
+
+
+CREATE OR REPLACE PROCEDURE matar_tareas_lentas(minutes DOUBLE)
+RETURNS VARIANT -- tipo de dato para devolver un JSON
+LANGUAGE JAVASCRIPT
+EXECUTE AS CALLER
+AS
+$$
+    var datosADevolver = [];
+    // Paso 1: Identificar las tareas lentas
+    var queryCalculoMesAnterior = `
+        SELECT 
+            QUERY_ID, NAME
+        FROM 
+            TABLE(INFORMATION_SCHEMA.TASK_HISTORY()),
+            (SELECT DATEADD(MINUTE, ?,CURRENT_TIMESTAMP()) as limite) tiempo
+        WHERE 
+            tiempo.limite > QUERY_START_TIME
+            AND STATE = 'RUNNING' `;
+    var datosMesAnterior = snowflake.execute({sqlText: queryCalculoMesAnterior, binds: [-1*MINUTES]});
+
+    // Paso 2: Matar las tareas lentas
+    var queryMatarTareas = "SELECT system$cancel_query(?)";
+    var statement = snowflake.createStatement({sqlText: queryMatarTareas});
+    while (datosMesAnterior.next()) {
+        var queryId = datosMesAnterior.getColumnValue(1);
+        var nombreTarea = datosMesAnterior.getColumnValue(2);
+        var borrado = true;
+        var error = null;
+        try{
+            statement.execute({binds: [queryId]});
+        } catch (err) {
+            borrado = false;
+            error = err;
+        }
+        
+        datosADevolver.push({queryId: queryId, nombreTarea: nombreTarea, borrado, error});
+    }
+    return datosADevolver;
+$$
+;
+
+CALL matar_tareas_lentas(1);
+
+SELECT system$cancel_query('01b20920-0203-56b5-0001-ffc6000353fe');
